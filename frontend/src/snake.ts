@@ -88,27 +88,30 @@ export class Snake {
 		});
 	}
 
-	private getGridNumWithDirCompensation(x: number, y: number, dx: number, dy: number) {
-		if(dx == 1 || dy == 1)
-		{
+	private getGridNumWithDirCompensation(
+		x: number,
+		y: number,
+		dx: number,
+		dy: number
+	) {
+		if (dx == 1 || dy == 1) {
 			// we are moving right, so gridNum snaps back to left most
 			//we are moving down so girdNum snaps to top most
 			return [Math.floor(x / textureSize), Math.floor(y / textureSize)];
-		}
-		else
-		{
+		} else {
 			//we are moving left so gridNum snaps to right most
 			//we are moving up so gridNum snaps to bottom most
 			return [Math.ceil(x / textureSize), Math.ceil(y / textureSize)];
 		}
-	};
+	}
 
 	move(delta) {
-
-
-
-		let gridNumOfHead = this.getGridNumWithDirCompensation(this.head.sprite.x, this.head.sprite.y, this.head.dx, this.head.dy);
-
+		let gridNumOfHead = this.getGridNumWithDirCompensation(
+			this.head.sprite.x,
+			this.head.sprite.y,
+			this.head.dx,
+			this.head.dy
+		);
 
 		if (
 			this.lastTileOfHead[0] == gridNumOfHead[0] &&
@@ -151,8 +154,8 @@ export class Snake {
 			snakeBodyTypes.body
 		);
 		tail.sprite.x = tail.sprite.x + -1 * tail.dx * textureSize + 1;
-		tail.sprite.y =  tail.sprite.y + -1 * tail.dy * textureSize;
-		this.body.splice(this.body.length-1, 0, bodyElem); //appends bodyElem to second to last element
+		tail.sprite.y = tail.sprite.y + -1 * tail.dy * textureSize;
+		this.body.splice(this.body.length - 1, 0, bodyElem); //appends bodyElem to second to last element
 	}
 }
 
@@ -186,7 +189,7 @@ class SnakeBody {
 	/**
 	 * sets the direction of the body part, as well as the texture
 	 * this function might modify the position of the body part as well
-	 * 
+	 *
 	 * @param dx direction of movement x
 	 * @param dy direction of movement y
 	 */
@@ -241,8 +244,7 @@ class SnakeBody {
 	}
 }
 
-class SnakeTail extends SnakeBody
-{
+class SnakeTail extends SnakeBody {
 	prevDisplacement: number[] = [0, 0];
 	/**
 	 * this is a modified version of the snake body class
@@ -251,21 +253,13 @@ class SnakeTail extends SnakeBody
 	 * this is a hacky solution, but it works
 	 */
 	setDir(dx: number, dy: number): void {
-
-		if(dx == 1 && dy == 0)
-		{
+		if (dx == 1 && dy == 0) {
 			this.prevDisplacement = [1, 0.5];
-		}
-		else if(dx == -1 && dy == 0)
-		{
+		} else if (dx == -1 && dy == 0) {
 			this.prevDisplacement = [-1, -0.5];
-		}
-		else if(dx == 0 && dy == 1)
-		{
+		} else if (dx == 0 && dy == 1) {
 			this.prevDisplacement = [-0.5, 1];
-		}
-		else if(dx == 0 && dy == -1)
-		{
+		} else if (dx == 0 && dy == -1) {
 			this.prevDisplacement = [0.5, -1];
 		}
 
