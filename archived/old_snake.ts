@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { arraysEqual } from "./util";
 
 const magOfDelta = 2;
 const textures = {
@@ -35,6 +36,7 @@ export class Snake {
 	body: Array<SnakeBody>;
 	head: SnakeBody;
 	lastTileOfHead: Array<number>;
+	listOfCorners: Array<SnakeCorner> = [];
 
 	constructor(app: PIXI.Application) {
 		this.app = app;
@@ -64,6 +66,8 @@ export class Snake {
 		this.add();
 		this.initLastTileOfHead();
 
+		// setInterval(() => {this.add()}, 5000);
+
 		app.ticker.add(this.move.bind(this));
 
 		document.addEventListener("keydown", (e) => {
@@ -86,6 +90,18 @@ export class Snake {
 					break;
 			}
 		});
+
+		// let myCorner = new PIXI.Sprite(textures.corner_bleft);
+		// myCorner.anchor.set(0.5);
+		// app.stage.addChild(myCorner);
+		// myCorner.x = 500;
+		// myCorner.y = 500;
+		// let myGraphic = createCornerMask(500,500);
+		// app.stage.addChild(myGraphic);
+
+		// let myBody = new SnakeBody(app, 500, 450, 0, 1, snakeBodyTypes.body);
+		// setInterval(() => {myBody.move(1)}, 100);
+		// myBody.sprite.mask = myGraphic;
 	}
 
 	private getGridNumWithDirCompensation(
@@ -123,13 +139,49 @@ export class Snake {
 			}
 		} //we moved a tile, change dir for everything
 		else {
+			this.listOfCorners.forEach((val) => val.remove());
+			this.listOfCorners = [];
+
 			let lastDx = this.nextDx;
 			let lastDy = this.nextDy;
-			for (let bodyPart of this.body) {
+			let bodyPartIndex: string | number;
+			for (bodyPartIndex in this.body) {
+				bodyPartIndex = parseInt(bodyPartIndex); // for some reason for .. in loops are strings
+
+				let bodyPart = this.body[bodyPartIndex];
 				let temp = [bodyPart.dx, bodyPart.dy];
 				let xy = getGridPos(getGridNum(bodyPart.sprite.x, bodyPart.sprite.y));
 				bodyPart.sprite.x = xy[0];
 				bodyPart.sprite.y = xy[1];
+
+				if (
+					(bodyPart.dx != lastDx || bodyPart.dy != lastDy) && bodyPartIndex != this.body.length-1
+				) {
+					// we are not at the head
+					let bodyPartCorner;
+					if (bodyPartIndex > 0) {
+						bodyPartCorner = new SnakeCorner(
+							this.app,
+							bodyPart.sprite.x,
+							bodyPart.sprite.y,
+							this.body[bodyPartIndex],
+							this.body[bodyPartIndex - 1]
+						);
+					}
+					else
+					{
+						bodyPart.setDir(lastDx, lastDy);
+						bodyPartCorner = new SnakeCorner(
+							this.app,
+							bodyPart.sprite.x,
+							bodyPart.sprite.y,
+							this.body[bodyPartIndex+1],
+							this.body[bodyPartIndex]
+						);
+					}
+					this.listOfCorners.push(bodyPartCorner);
+				}
+
 				bodyPart.setDir(lastDx, lastDy);
 
 				lastDx = temp[0];
@@ -182,6 +234,7 @@ class SnakeBody {
 		this.sprite.texture = this.getTexture();
 		this.sprite.x = x;
 		this.sprite.y = y;
+		this.sprite.pivot.set(0.5);
 		this.sprite.anchor.set(0.5);
 		app.stage.addChild(this.sprite);
 	}
@@ -212,8 +265,6 @@ class SnakeBody {
 				return textures.body_horiz;
 			}
 		}
-
-		this.sprite.pivot.set(0.5);
 
 		if (this.dx == 1 && this.dy == 0) {
 			this.sprite.angle = 0;
@@ -266,5 +317,168 @@ class SnakeTail extends SnakeBody {
 		this.sprite.x += this.prevDisplacement[0];
 		this.sprite.y += this.prevDisplacement[1];
 		super.setDir(dx, dy);
+	}
+}
+
+/**
+ * creates a mask for when using a corner piece
+ * x and y are the coordinates of the center of the mask
+ */
+function createCornerMask(x: number, y: number, color = 0xffffff): PIXI.Container {
+	/*
+		....
+		.  .
+		....
+		outer rect: 192 x 192
+		inner rect: 64 x 64
+	*/
+
+	const graphic = new PIXI.Graphics();
+	graphic.beginFill(color);
+	const innerRectX = x - textureSize / 2;
+	const innerRectY = y - textureSize / 2;
+	const innerRectDimensions = textureSize;
+
+	const outerRectX = innerRectX - textureSize;
+	const outerRectY = innerRectY - textureSize;
+	const outerRectDimensions = textureSize * 3;
+
+	graphic.drawRect(
+		outerRectX,
+		outerRectY,
+		outerRectDimensions,
+		outerRectDimensions
+	);
+	graphic.beginHole();
+	graphic.drawRect(
+		innerRectX,
+		innerRectY,
+		innerRectDimensions,
+		innerRectDimensions
+	);
+	graphic.endHole();
+	graphic.endFill();
+
+	return graphic;
+}
+
+interface CornerDirection {
+	str: string;
+	dirIn: Array<number[]>;
+	dirOut: Array<number[]>;
+}
+
+type CornerDirections = {
+	[key: string]: CornerDirection;
+};
+
+const cornerDirections: CornerDirections = {
+	topLeft: {
+		str: "tleft",
+		dirIn: [
+			[0, -1],
+			[-1, 0],
+		],
+		dirOut: [
+			[1, 0],
+			[0, 1],
+		],
+	},
+	topRight: {
+		str: "tright",
+		dirIn: [
+			[1, 0],
+			[0, -1],
+		],
+		dirOut: [
+			[0, 1],
+			[-1, 0],
+		],
+	},
+	bottomLeft: {
+		str: "bleft",
+		dirIn: [
+			[0, 1],
+			[-1, 0],
+		],
+		dirOut: [
+			[1, 0],
+			[0, -1],
+		],
+	},
+	bottomRight: {
+		str: "bright",
+		dirIn: [
+			[1, 0],
+			[0, 1],
+		],
+		dirOut: [
+			[0, -1],
+			[-1, 0],
+		],
+	},
+};
+
+class SnakeCorner {
+	app: PIXI.Application;
+	sprite: PIXI.Sprite;
+	mask: PIXI.Container;
+	snakeIn: SnakeBody;
+	snakeOut: SnakeBody;
+	direction: CornerDirection;
+
+	constructor(
+		app: PIXI.Application,
+		x: number,
+		y: number,
+		snakeIn: SnakeBody,
+		snakeOut: SnakeBody
+	) {
+		this.app = app;
+		this.snakeIn = snakeIn;
+		this.snakeOut = snakeOut;
+		this.setDirection();
+
+		// this.mask = createCornerMask(x, y);
+		this.mask = null
+		this.sprite = new PIXI.Sprite(textures["corner_" + this.direction.str]);
+		this.sprite.anchor.set(0.5);
+		this.sprite.x = x;
+		this.sprite.y = y;
+		this.app.stage.addChild(this.sprite);
+
+		this.snakeIn.sprite.mask = this.mask;
+		this.snakeOut.sprite.mask = this.mask;
+
+		// Testing code
+		let mask = createCornerMask(x,y,0);
+
+		// this.app.stage.addChild(mask);
+
+	}
+
+	setDirection() {
+		const dirIn = [this.snakeIn.dx, this.snakeIn.dy];
+		const dirOut = [this.snakeOut.dx, this.snakeOut.dy];
+
+		for (const key in cornerDirections) {
+			if (
+				(arraysEqual(cornerDirections[key].dirIn[0], dirIn) &&
+					arraysEqual(cornerDirections[key].dirOut[0], dirOut)) ||
+				(arraysEqual(cornerDirections[key].dirIn[1], dirIn) &&
+					arraysEqual(cornerDirections[key].dirOut[1], dirOut))
+			) {
+				this.direction = cornerDirections[key];
+				return;
+			}
+		}
+
+		throw new Error(`Direction (${dirIn[0]}, ${dirIn[1]}) to (${dirOut[0]}, ${dirOut[1]}) not found`);
+	}
+
+	remove() {
+		this.app.stage.removeChild(this.sprite);
+		this.snakeIn.sprite.mask = null;
+		this.snakeOut.sprite.mask = null;
 	}
 }
