@@ -1,0 +1,17 @@
+add camera system
+	fix generation of apple 
+add collision with self snake
+add menu system
+	(in World add a game state)
+		in playing game state, move up the timer as well
+add pixel by pixel movement intsead of tile by tile
+
+
+set up web sockets
+add rooms
+
+set up multiplayer
+
+add powerups
+add bots
+add matchmaking

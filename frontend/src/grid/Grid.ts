@@ -25,7 +25,7 @@ export class Grid
 
 	updateObject(gridObject: GridObject, oldX: number, oldY: number)
 	{
-		this.setPosition(oldX, oldY, null);
+		// this.setPosition(oldX, oldY, null);
 		this.setPosition(gridObject.gridX, gridObject.gridY, gridObject);
 	}
 
@@ -41,10 +41,10 @@ export class Grid
 			throw new Error("Grid out of bounds");
 		}
 
-		if(this.grid[x][y] && gridObject)
-		{
-			console.warn(`Overriding object in grid position (${x},${y})`);
-		}
+		// if(this.grid[x][y] && gridObject)
+		// {
+		// 	console.warn(`Overriding object in grid position (${x},${y})`);
+		// }
 
 		this.grid[x][y] = gridObject;
 	}

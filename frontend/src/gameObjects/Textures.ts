@@ -1,3 +1,4 @@
+//todo probably need to make this a better system
 import * as PIXI from "pixi.js";
 
 export const textures = {
@@ -10,6 +11,7 @@ export const textures = {
 	corner_bleft: PIXI.Texture.from("/assets/corner_bleft.png"),
 	corner_bright: PIXI.Texture.from("/assets/corner_bright.png"),
 	apple: PIXI.Texture.from("/assets/apple.png"),
+	background : PIXI.Texture.from("/assets/forestbackground.jpg"),
 };
 
 export const snakeBodyTypes = {
