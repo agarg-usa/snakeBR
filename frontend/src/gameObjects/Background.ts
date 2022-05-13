@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { TilingSprite } from 'pixi.js';
+import { TEXTURE_SIZE } from '../grid/Grid';
 import { textures } from './Textures';
 
 // https://medium.com/anvoevodin/endless-background-with-tiling-sprite-in-pixijs-v5-79d95a08fe7
@@ -20,8 +21,9 @@ export default class Background extends TilingSprite {
 		this.height = height
     }
 
-	onUpdate(delta)
+	move(dx, dy)
 	{
-		// this.tilePosition.x -= delta;
+		this.tilePosition.x -= dx * TEXTURE_SIZE/4;
+		this.tilePosition.y -= dy * TEXTURE_SIZE/4;
 	}
 }

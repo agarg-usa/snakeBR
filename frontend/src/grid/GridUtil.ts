@@ -1,4 +1,4 @@
-import { textureSize } from "./Grid";
+import { TEXTURE_SIZE } from "./Grid";
 
 export function arraysEqual(a: Array<any>, b: Array<any>): boolean {
 	if (a === b) return true;
@@ -12,11 +12,11 @@ export function arraysEqual(a: Array<any>, b: Array<any>): boolean {
 }
 
 // given an x,y cord get the grid number
-export function getGridFromCord(x: number, y: number) {
-	return {x: Math.round(x / textureSize), y: Math.round(y / textureSize)};
-}
+// export function getGridFromCord(x: number, y: number) {
+// 	return {x: Math.round(x / textureSize), y: Math.round(y / textureSize)};
+// }
 
 // given a grid x,y pos get the x,y cord
 export function getPosOfGrid(x:number, y:number) {
-	return { x: textureSize * x, y: textureSize * y};
+	return { x: TEXTURE_SIZE * x, y: TEXTURE_SIZE * y};
 }

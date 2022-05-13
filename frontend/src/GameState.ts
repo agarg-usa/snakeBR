@@ -19,16 +19,16 @@ export class SinglePlayerGameState extends GameState
 {
 	snake: Snake;
 	moveFunction : any;
-	bg : Background;
+	background : Background;
 	start()
 	{
-		this.bg = new Background();
+		this.background = new Background();
 		let brightnessFilter = new PIXI.filters.ColorMatrixFilter();
 		brightnessFilter.brightness(0.75, false);
-		this.bg.filters = [brightnessFilter];
-		this.world.app.stage.addChild(this.bg);
+		this.background.filters = [brightnessFilter];
+		this.world.app.stage.addChild(this.background);
 
-		this.bg.onResize(this.world.app.screen.width, this.world.app.screen.height);
+		this.background.onResize(this.world.app.screen.width, this.world.app.screen.height);
 		window.addEventListener("resize", this.onResize.bind(this));
 
 		this.snake = new Snake(this.world);
@@ -38,7 +38,7 @@ export class SinglePlayerGameState extends GameState
 
 	onResize()
 	{
-		this.bg.onResize(window.innerWidth, window.innerHeight);
+		this.background.onResize(window.innerWidth, window.innerHeight);
 	}
 
 	end()

@@ -1,18 +1,48 @@
 //todo probably need to make this a better system
 import * as PIXI from "pixi.js";
 
-export const textures = {
-	head: PIXI.Texture.from("/assets/head.png"),
-	tail: PIXI.Texture.from("/assets/tail.png"),
-	body_vert: PIXI.Texture.from("/assets/body_vert.png"),
-	body_horiz: PIXI.Texture.from("/assets/body_horiz.png"),
-	corner_tleft: PIXI.Texture.from("/assets/corner_tleft.png"),
-	corner_tright: PIXI.Texture.from("/assets/corner_tright.png"),
-	corner_bleft: PIXI.Texture.from("/assets/corner_bleft.png"),
-	corner_bright: PIXI.Texture.from("/assets/corner_bright.png"),
-	apple: PIXI.Texture.from("/assets/apple.png"),
-	background : PIXI.Texture.from("/assets/forestbackground.jpg"),
+const textureLinks =
+{
+	head: "/assets/head.png",
+	tail: "/assets/tail.png",
+	body_vert: "/assets/body_vert.png",
+	body_horiz: "/assets/body_horiz.png",
+	corner_tleft: "/assets/corner_tleft.png",
+	corner_tright: "/assets/corner_tright.png",
+	corner_bleft: "/assets/corner_bleft.png",
+	corner_bright: "/assets/corner_bright.png",
+	apple: "/assets/apple.png",
+	background : "/assets/forestbackground.jpg",
+}
+
+export let textures = {
+	head : null,
+	tail : null,
+	body_vert : null,
+	body_horiz : null,
+	corner_tleft : null,
+	corner_tright : null,
+	corner_bleft : null,
+	corner_bright : null,
+	apple : null,
+	background : null,
 };
+
+export function loadTextures(callback: Function)
+{
+	let loader = PIXI.Loader.shared;
+	for(let key in textureLinks)
+	{
+		loader.add(key, textureLinks[key]);
+	}
+	loader.load(() => {
+		for(let key in textureLinks)
+		{
+			textures[key] = loader.resources[key].texture;
+		}
+		callback();
+	});
+}
 
 export const snakeBodyTypes = {
 	head: "head",

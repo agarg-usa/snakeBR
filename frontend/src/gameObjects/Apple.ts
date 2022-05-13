@@ -20,9 +20,6 @@ export function generateApple(world: World): Apple {
 		gridY = Math.floor(5 * Math.random() + 5);
 	}
 
-	console.log("putting apple at " + gridX + "," + gridY);
-	console.log(world.grid.getObjAtPosition(gridX, gridY));
-
  	return new Apple(world, gridX, gridY);
 }
 

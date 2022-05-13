@@ -21,8 +21,7 @@ export class GridObject
 
 		this.gridX = gridX;
 		this.gridY = gridY;
-		this.sprite.x = getPosOfGrid(gridX, gridY).x;
-		this.sprite.y = getPosOfGrid(gridX, gridY).y;
+		this.updateSprite();
 		this.world.grid.addObject(this);
 
 		world.app.stage.addChild(this.sprite);
@@ -38,8 +37,23 @@ export class GridObject
 
 		this.world.grid.updateObject(this, oldX, oldY);
 
-		this.sprite.x = getPosOfGrid(gridX, gridY).x;
-		this.sprite.y = getPosOfGrid(gridX, gridY).y;
+		this.updateSprite();
+	}
+
+	updateSprite()
+	{
+		let pos = this.world.camera.calcPos(this.gridX, this.gridY);
+
+		if(pos)
+		{
+			this.sprite.visible = true;
+			this.sprite.x = pos.x;
+			this.sprite.y = pos.y;
+		}
+		else
+		{
+			this.sprite.visible = false;
+		}
 	}
 
 	delete()

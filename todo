@@ -1,10 +1,11 @@
 add camera system
-	fix generation of apple 
-add collision with self snake
+	fix generation of apple
+	add pixel by pixel movement instead of tile by tile
+	fix camera movement with snake head
+	add walls
 add menu system
 	(in World add a game state)
 		in playing game state, move up the timer as well
-add pixel by pixel movement intsead of tile by tile
 
 
 set up web sockets
@@ -12,6 +13,8 @@ add rooms
 
 set up multiplayer
 
+
 add powerups
 add bots
 add matchmaking
+add sounds

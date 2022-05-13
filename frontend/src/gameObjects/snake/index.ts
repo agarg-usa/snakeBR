@@ -90,7 +90,7 @@ export class Snake {
 	}
 
 	setDirection(dx: number, dy: number) {
-		if ((this.nextDx == null && this.nextDy == null)) {
+		if (this.nextDx == null && this.nextDy == null) {
 			if (this.bufferedDx == null && this.bufferedDy == null) {
 				// no buffered direction exists nor next direction exists
 				this.nextDx = dx;
@@ -110,43 +110,71 @@ export class Snake {
 		}
 	}
 
-	getNextDirection()
-	{
+	getNextDirection() {
 		let currDir = this.getCurrDirection();
-		if(this.nextDx == null && this.nextDy == null)
-		{
-			if(this.bufferedDx == null && this.bufferedDy == null)
-			{
+		if (this.nextDx == null && this.nextDy == null) {
+			if (this.bufferedDx == null && this.bufferedDy == null) {
 				return currDir;
 				// no buffered direction exists nor next direction exists, so return curr direction
-			}
-			else
-			{
+			} else {
 				// buffered direction exists, so return buffered dir
 				let dx = this.bufferedDx;
 				let dy = this.bufferedDy;
 				this.bufferedDx = null;
 				this.bufferedDy = null;
-				if(this.isOppositeDir(dx, dy, currDir.dx, currDir.dy))
-				{
+				if (this.isOppositeDir(dx, dy, currDir.dx, currDir.dy)) {
 					return this.getNextDirection();
 				}
-				return {dx, dy};
+				return { dx, dy };
 			}
-		}
-		else
-		{
+		} else {
 			// next direction exists, so return next dir
 			let dx = this.nextDx;
 			let dy = this.nextDy;
 			this.nextDx = null;
 			this.nextDy = null;
-			if(this.isOppositeDir(dx, dy, currDir.dx, currDir.dy))
-			{
+			if (this.isOppositeDir(dx, dy, currDir.dx, currDir.dy)) {
 				return this.getNextDirection();
 			}
-			return {dx, dy};
+			return { dx, dy };
 		}
+	}
+
+	private createEndGameState() {
+		this.world.gameState.end();
+		this.world.gameState = new EndGameState(this.world, this.score);
+		this.world.gameState.start();
+	}
+
+	private headMovement(nextDx, nextDy) {
+		let head = this.head;
+		head.setDir(nextDx, nextDy);
+
+		let nextTile = { x: head.gridX + head.dx, y: head.gridY + head.dy };
+
+		if (this.world.grid.isOutOfBounds(nextTile.x, nextTile.y)) {
+			this.createEndGameState();
+			head.gridX = nextTile.x;
+			head.gridY = nextTile.y;
+			head.updateSprite(); // move the sprite to a new position without moving the grid tile
+			return;
+		}
+
+		let nextTileObj = this.world.grid.getObjAtPosition(nextTile.x, nextTile.y);
+		if (nextTileObj instanceof Apple) {
+			this.add();
+			generateApple(this.world);
+			nextTileObj.delete();
+			this.score++;
+		} else if (
+			nextTileObj instanceof SnakeBody &&
+			!(nextTileObj instanceof SnakeTail)
+		) {
+			this.createEndGameState();
+		}
+
+		this.head.move();
+		this.world.camera.moveCamera(this.head.dx, this.head.dy);
 	}
 
 	move() {
@@ -159,26 +187,9 @@ export class Snake {
 
 			for (let i = 0; i < this.body.length - 1; i++) {
 				let bodyPart = this.body[i];
-				let temp = [bodyPart.dx, bodyPart.dy];
+				let tempDir = [bodyPart.dx, bodyPart.dy];
 				if (i == 0) {
-					// this is the head of the snake
-					let head = bodyPart; // for readability
-					head.setDir(lastDx, lastDy);
-
-					let nextTileObj = this.world.grid.getObjAtPosition(
-						head.gridX + head.dx,
-						head.gridY + head.dy
-					);
-					if (nextTileObj instanceof Apple) {
-						this.add();
-						generateApple(this.world);
-						nextTileObj.delete();
-						this.score++;
-					} else if (nextTileObj instanceof SnakeBody && !(nextTileObj instanceof SnakeTail)) {
-						this.world.gameState.end();
-						this.world.gameState = new EndGameState(this.world, this.score);
-						this.world.gameState.start();
-					}
+					this.headMovement(lastDx, lastDy);
 				} else {
 					bodyPart.setDir(
 						lastDx,
@@ -186,11 +197,12 @@ export class Snake {
 						this.body[i - 1].dx,
 						this.body[i - 1].dy
 					);
+					bodyPart.move();
 				}
 
-				bodyPart.move();
-				lastDx = temp[0];
-				lastDy = temp[1];
+
+				lastDx = tempDir[0];
+				lastDy = tempDir[1];
 			}
 
 			// we deal with the tail movement separately
@@ -198,19 +210,7 @@ export class Snake {
 			let beforeTail = this.body[this.body.length - 2];
 
 			tail.setDir(beforeTail.dx, beforeTail.dy);
-			this.world.grid.setPosition(tail.gridX, tail.gridY, null);
-			// TODO im too tired to make this pretty
-			// but this tail movement thing / the GridObject.move() should be fixxed to handle
-			// when you should rather move the object by nulling its current position then moving it
-			// to the new position, or if you should just move the object to the new position
-
-			// you want to null it in the case of the tail, when no object overrides the tails grid pos
-			// you dont want to null it in the case of a snake body, when the prev body parts come before
-			// it and overrides the curr body parts position
-
-			//TODO also add collision with walls (end of the grid)
 			tail.setPos(beforeTail.gridX - tail.dx, beforeTail.gridY - tail.dy);
-
 		}
 	}
 
