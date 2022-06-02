@@ -2,10 +2,11 @@ import * as PIXI from "pixi.js";
 import { snakeBodyTypes } from "../Textures";
 import { SnakeBody, SnakeTail } from "./SnakeBody";
 import { World } from "../../World";
-import { Apple, generateApple } from "../Apple";
+import { Apple, generateApple, generateApples } from "../Apple";
 import { EndGameState } from "../../GameState";
 
-const deltaToMove = 100;
+const deltaToMove = 50; // ms time to update snake
+const percentOfScreenToMoveCamera = 0.33; // ex. if the snake is in the top 1/3 of the screen, the camera will move up
 
 export class Snake {
 	world: World;
@@ -59,7 +60,8 @@ export class Snake {
 
 		// this.world.app.ticker.add(this.move.bind(this)); this is handled in the game state
 		this.setUpController();
-		generateApple(this.world);
+		generateApples(this.world);
+		this.world.camera.centerCamera(this.head.gridX, this.head.gridY);
 	}
 
 	private setUpController() {
@@ -146,6 +148,33 @@ export class Snake {
 		this.world.gameState.start();
 	}
 
+	private moveCamera()
+	{
+		let screenGrid = this.world.camera.getScreenGrid();
+		let currHeadPosOnScreen = this.world.camera.calcGridNum(this.head.gridX, this.head.gridY);
+
+		// if the head is in the left 25% of the screen, move the camera left
+		if(currHeadPosOnScreen.gridX < screenGrid.gridX*percentOfScreenToMoveCamera )
+		//TODO: BUG: if the screen is made smaller this will crash (gridX for some reason will come out as null?)
+		// maybe because its moved from too big to too small or something like that
+		{
+			this.world.camera.moveCamera(-1, 0);
+		}
+		else if(currHeadPosOnScreen.gridX > screenGrid.gridX * (1-percentOfScreenToMoveCamera))
+		{
+			this.world.camera.moveCamera(1, 0);
+		}
+		else if(currHeadPosOnScreen.gridY < screenGrid.gridY*percentOfScreenToMoveCamera)
+		{
+			this.world.camera.moveCamera(0, -1);
+		}
+		else if(currHeadPosOnScreen.gridY > screenGrid.gridY* (1-percentOfScreenToMoveCamera))
+		{
+			this.world.camera.moveCamera(0, 1);
+		}
+
+	}
+
 	private headMovement(nextDx, nextDy) {
 		let head = this.head;
 		head.setDir(nextDx, nextDy);
@@ -174,7 +203,8 @@ export class Snake {
 		}
 
 		this.head.move();
-		this.world.camera.moveCamera(this.head.dx, this.head.dy);
+		// this.world.camera.moveCamera(this.head.dx, this.head.dy);
+		this.moveCamera();
 	}
 
 	move() {

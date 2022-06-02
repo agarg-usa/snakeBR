@@ -12,11 +12,11 @@ export function arraysEqual(a: Array<any>, b: Array<any>): boolean {
 }
 
 // given an x,y cord get the grid number
-// export function getGridFromCord(x: number, y: number) {
-// 	return {x: Math.round(x / textureSize), y: Math.round(y / textureSize)};
-// }
+export function getGridFromCord(x: number, y: number) {
+	return {gridX: Math.round(x / TEXTURE_SIZE), gridY: Math.round(y / TEXTURE_SIZE)};
+}
 
 // given a grid x,y pos get the x,y cord
-export function getPosOfGrid(x:number, y:number) {
-	return { x: TEXTURE_SIZE * x, y: TEXTURE_SIZE * y};
+export function getPosOfGrid(gridX:number, gridY:number) {
+	return { x: TEXTURE_SIZE * gridX, y: TEXTURE_SIZE * gridY};
 }

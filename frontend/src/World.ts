@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Camera } from "./Camera";
 import { GameState, SinglePlayerGameState } from "./GameState";
 import { Grid } from "./grid/Grid";
+import { getPosOfGrid } from "./grid/GridUtil";
 
 export class World
 {

@@ -1,7 +1,7 @@
 import { GridObject } from "./GridObject";
 
 export const TEXTURE_SIZE = 64;
-export const DEFAULT_GRID_LENGTH = 100;
+export const DEFAULT_GRID_LENGTH = 50;
 
 export class Grid
 {

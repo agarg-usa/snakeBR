@@ -1,8 +1,5 @@
-add camera system
-	fix generation of apple
-	add pixel by pixel movement instead of tile by tile
-	fix camera movement with snake head
-	add walls
+refactor and comment code
+
 add menu system
 	(in World add a game state)
 		in playing game state, move up the timer as well
@@ -18,3 +15,4 @@ add powerups
 add bots
 add matchmaking
 add sounds
+add pixel by pixel movement instead of tile by tile
