@@ -1,18 +1,19 @@
-//todo probably need to make this a better system
 import * as PIXI from "pixi.js";
 
 const textureLinks =
 {
-	head: "/assets/head.png",
-	tail: "/assets/tail.png",
-	body_vert: "/assets/body_vert.png",
-	body_horiz: "/assets/body_horiz.png",
-	corner_tleft: "/assets/corner_tleft.png",
-	corner_tright: "/assets/corner_tright.png",
-	corner_bleft: "/assets/corner_bleft.png",
-	corner_bright: "/assets/corner_bright.png",
+	head: "/assets/snake/head.png",
+	tail: "/assets/snake/tail.png",
+	body_vert: "/assets/snake/body_vert.png",
+	body_horiz: "/assets/snake/body_horiz.png",
+	corner_tleft: "/assets/snake/corner_tleft.png",
+	corner_tright: "/assets/snake/corner_tright.png",
+	corner_bleft: "/assets/snake/corner_bleft.png",
+	corner_bright: "/assets/snake/corner_bright.png",
 	apple: "/assets/apple.png",
 	background : "/assets/forestbackground.jpg",
+	// background : "/assets/apple.png",
+
 }
 
 export let textures = {

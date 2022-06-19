@@ -1,35 +1,32 @@
-#app
-{
+#app {
 	width: 100vw;
 	height: 100vh;
 
 	position: relative;
 }
 
-.center
-{
-	display:flex;
-	align-items:center;
-	justify-content:center;
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 100%;
 	height: 100%;
 }
 
-#app canvas
-{
+#app canvas {
 	position: absolute;
 }
 
-#overlay
-{
+#overlay {
 	position: absolute;
 	z-index: 1;
 	width: 100%;
 	height: 100%;
 }
 
-body{
+body {
 	margin: 0;
+	font-family: "Inter", sons-serif;
 }
 
 .loader {
@@ -42,6 +39,64 @@ body{
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.menuMainElem {
+	/* background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1)),url("assets/leaf_texture.jpg"); */
+	background: linear-gradient(rgba(255, 255, 255, 0), rgba(24, 94, 3, 0.5)),
+		url("assets/leaf_texture.jpg");
+	border: 4px solid black;
+	border-radius: 10%;
+	display: flex;
+	padding: 10px 50px 50px 50px;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: rgb(0 0 0 / 100%) 0px 5px 15px;
+}
+
+h1 {
+	font-size: 3em;
+}
+
+.main-button {
+    background-color: #2aa806;
+    border: 2px solid black;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 32px;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-weight: bold;
+    box-shadow: rgb(0 0 0 / 30%) 0px 5px 15px;
+}
+.main-button:hover {
+	filter: brightness(80%);
+}
+
+.main-button:active {
+	filter: brightness(60%);
+}
+
+.horizontal-flexbox {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	justify-content: space-around;
+}
+
+.main-snake-img {
+	width: 500px;
+	margin: 20px;
+	box-shadow: rgb(0 0 0 / 30%) 0px 5px 15px;
+	border-radius: 10px;
 }

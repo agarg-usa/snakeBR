@@ -4,6 +4,7 @@ add menu system
 	(in World add a game state)
 		in playing game state, move up the timer as well
 
+sound
 
 set up web sockets
 add rooms
@@ -16,3 +17,8 @@ add bots
 add matchmaking
 add sounds
 add pixel by pixel movement instead of tile by tile
+
+fix bug:
+	seems like it takes up a large amount of cpu
+
+	when moving from wide screen to normal screen game crashes

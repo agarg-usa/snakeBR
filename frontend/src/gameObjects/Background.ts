@@ -8,7 +8,7 @@ import { textures } from './Textures';
 export default class Background extends TilingSprite {
 	constructor()
 	{
-		super(textures.background, 1, textures.background.height);
+		super(textures.background, window.innerWidth, window.innerHeight);
 	}
 
 	onResize(width, height) {

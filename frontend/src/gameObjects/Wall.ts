@@ -11,7 +11,7 @@ export function createWall(x : number, y: number)
 	wall.alpha = 0.7;
 	wall.anchor.set(0.5);
 	wall.pivot.set(0.5);
-	wall.tint = 0xd9263a; 
+	wall.tint = 0xd9263a;
 	wall.x = x;
 	wall.y = y;
 	return wall;
