@@ -5,6 +5,7 @@ import {Grid} from "./grid/Grid";
 import { SinglePlayerGameState } from "./GameState";
 import Stats from "stats.js";
 import { loadTextures } from "./gameObjects/Textures";
+import io from "socket.io-client"
 
 // overlay is the div which allows you to overlay html elements on top of the canvas
 let overlay = document.getElementById("overlay");
@@ -37,4 +38,5 @@ loadTextures(() => {
 	app.ticker.add(animate);
 });
 
+var socket = io();
 

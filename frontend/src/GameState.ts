@@ -64,10 +64,10 @@ export class SinglePlayerGameState extends GameState
 		this.background = new Background();
 		let brightnessFilter = new PIXI.filters.ColorMatrixFilter();
 		brightnessFilter.brightness(0.75, false);
-		// this.background.filters = [brightnessFilter];
+		this.background.filters = [brightnessFilter];
 		this.world.app.stage.addChild(this.background);
 
-		// this.background.onResize(this.world.app.screen.width, this.world.app.screen.height);
+		this.background.onResize(this.world.app.screen.width, this.world.app.screen.height);
 		this.resizeCallback = this.onResize.bind(this);
 		window.addEventListener("resize", this.resizeCallback);
 
@@ -80,7 +80,7 @@ export class SinglePlayerGameState extends GameState
 	{
 		this.background.onResize(window.innerWidth, window.innerHeight);
 	}
-
+z
 	end()
 	{
 		this.world.app.ticker.remove(this.moveFunction);
